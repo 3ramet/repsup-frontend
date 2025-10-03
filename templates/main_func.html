@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="{{ url_for('static', filename='func_style.css')}}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='func_idle_man.css')}}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='popup_info.css') }}">  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Thai:wght@100..900&family=Noto+Sans:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+  <title>Camera Access</title>
+</head>
+<body>
+  <div id="overlay" style="display:none;">
+    <img src="{{ url_for('static', filename='img/man_idle.png')}}" alt="Idle Man" id="idleMan">
+  </div>
+  <video src="" id="camera" autoplay></video>
+  <div id="popup-container-info" class="popup-hidden">
+        <div class="popup-overlay">
+            <div class="popup-box">
+                <div class="popup-header font-light">
+                    Information
+                    <button class="btn-no" onclick="hideInfoPopup()">
+                    <i class="fa-solid fa-xmark"></i>
+                    </button>
+                </div>
+                <div class="popup-content">
+                    <h1 id="popup_title" class="text-xl font-medium">Bicep Curl</h1>
+                    <img src="./static/img/excercise/bicep-curls-ex.png" id="popup-pic" alt="รูปภาพตัวอย่าง">
+                    <div class="content font-light snap-y">
+                        <p class="font-medium">รายละเอียด</p>
+                        <p id="popup-detail" class="pb-2 text-gray-600">เก็บศอกให้ชิดข้างลำตัว ไม่แกว่งเวลาผ่อนและออกแรง จะทำให้โดนกล้ามเนื้อหน้าแขนมากขึ้น</p>
+                        <p class="font-medium">ข้อควรระวัง</p>
+                        <p id="popup-notice" class="text-gray-600">ไม่งอข้อมือเพราะจะทำให้โดนปลายแขนมากกว่าต้นแขนด้านหน้า</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+  <section id="menu">
+      <a onclick="showPopup()" class="icon-btn">
+        <i class="fa-solid fa-xmark"></i>
+      </a>
+      <p class="text-white" id="title">TITLE.PLACEHOLDER</p>
+      <a onclick="showInfoPopup()" class="icon-btn">
+        <i class="fa-solid fa-info"></i>
+      </a>
+      <div class="btn-func">
+        <button id="startBtn" class="icon-btn start-btn">
+            <i class="fa-solid fa-play"></i> Start
+        </button>
+        <button id="stopBtn" class="icon-btn stop-btn" style="display: none;">
+            <i class="fa-solid fa-stop"></i> Stop
+        </button>
+      </div>
+  </section>
+  <div id="popup-container" class="popup-hidden">
+    <iframe src="{{ url_for('popup') }}"></iframe>
+  </div>
+  <script src="https://cdn.socket.io/4.6.1/socket.io.min.js"></script>
+  <script src="{{ url_for('static', filename='camera_access.js') }}"></script>
+  <script src="{{ url_for('static', filename='main_func.js') }}"></script>
+</body>
+</html>

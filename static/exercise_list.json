@@ -1,0 +1,38 @@
+[
+    {
+        "id": 1,
+        "title": "Bicep Curl",
+        "pic": "./img/excercise/bicep-curls.png",
+        "desc": "สร้างกล้ามเนื้อและกระชับต้นแขนด้านหน้า",
+        "lv": "ง่าย",
+        "body": "หน้าแขน",
+        "type": "Strength Loading",
+        "ex_pic": "./static/img/excercise/bicep-curls-ex.png",
+        "detail":"เก็บศอกให้ชิดข้างลำตัว ไม่แกว่งเวลาผ่อนและออก แรง จะทำให้โดนกล้ามเนื้อหน้าแขนมากขึ้น",
+        "notice": "ไม่งอข้อมือเพราะจะทำให้โดนปลายแขนมากกว่าต้นแขนด้านหน้า"
+    },
+    {
+        "id": 2,
+        "title": "Lateral Raise",
+        "pic": "./img/excercise/lateral-raise.png",
+        "desc": "ท่าบริหารกล้ามเนื้อหัวไหล่ด้านข้าง",
+        "lv": "กลาง",
+        "body": "หลัง, หัวไหล่, ไหล่ข้าง",
+        "type": "Strength Loading",
+        "ex_pic": "./static/img/excercise/lateral-raise-ex.png",
+        "detail":"ยกแขนไปด้านข้างให้สูงระดับไหล่ ยืนตรง ถือดัมเบลล์ ยกแขนออกด้านข้างช้า ๆ แล้วลดลง",
+        "notice":"ไม่แกว่งแขนหรือใช้แรงจากหลัง/คอ ไม่ยกแขนสูงเกินระดับไหล่"
+    },
+    {
+        "id": 3,
+        "title": "Squat",
+        "pic": "./img/excercise/squat.png",
+        "desc": "ท่าบริหารกล้ามเนื้อต้นขาด้านหน้าและก้น",
+        "lv": "ง่าย",
+        "body": "ก้น, ต้นขา",
+        "type": "Strength Body Weight",
+        "ex_pic": "./static/img/excercise/squat-ex.png",
+        "detail":"ดันสะโพกไปด้านหลังพร้อมงอเข่า หลังตรงเกร็งลำตัว ปลายเท้าจิกพื้นให้แน่น",
+        "notice":"เข่าไม่เลยปลายเท้าจนมากเกินไป เข่าไม่แยกออกจากก้นขณะนั่งลง"
+    }
+]

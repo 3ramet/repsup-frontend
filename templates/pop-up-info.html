@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Popup</title>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Thai:wght@100..900&family=Noto+Sans:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+  <style>
+    body {
+      margin: 0;
+      font-family: "Noto Sans Thai", sans-serif;
+    }
+
+    .popup-overlay {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      /* background: rgba(0,0,0,0.4); */
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .popup-box {
+      background: #fff;
+      border-radius: 15px;
+      width: 620px;
+      height: fit-content;
+      text-align: center;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+      overflow: hidden;
+    }
+
+    .popup-content img{
+      margin: 8px 0px 16px 0px;
+      border-top: 2px solid #66accb;
+      border-bottom: 2px solid #66accb;
+    }
+
+    .popup-header {
+      background: #66accb;
+      color: white;
+      font-size: 16px;
+      padding: 4px 16px;
+      align-content: center;
+      justify-content: space-between;
+      display: flex;
+      align-items: center;
+    }
+
+    .popup-content {
+      padding: 16px;
+      gap: 16px;
+    }
+
+    .content{
+      text-align: left;
+    }
+
+    .popup-content h1 {
+      text-align: left;
+    }
+
+    .popup-actions {
+      display: flex;
+      justify-content: center;
+      gap: 16px;
+      margin: 16px;
+    }
+
+    .btn {
+      border: none;
+      padding: 8px 32px;
+      font-size: 16px;
+      border-radius: 20px;
+      cursor: pointer;
+      transition: transform 0.25s ease, box-shadow 0.25s ease;
+    }
+    .btn:hover, .btn:active {
+        transform: scale(1.05); /* ✅ ขยายขึ้น 5% ตอนกดค้าง */
+        box-shadow: 0 4px 12px rgba(0,0,0,0.3); /* เพิ่มเงาให้ดูเด่น */
+    }
+    .btn-yes {
+      background: #6EB2CC;
+      color: white;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.2);
+    }
+
+    .btn-no {
+      border: 2px solid #6EB2CC;
+      /* background: white; */
+      padding: 4px 8px;
+      cursor: pointer;
+      border: none;
+      color: white;
+    }
+    .btn-no:hover, .btn-no:active {
+        opacity: 80%; /* ✅ ขยายขึ้น 5% ตอนกดค้าง */
+    }
+  </style>
+</head>
+<body>
+  <div class="popup-overlay">
+    <div class="popup-box">
+      <div class="popup-header font-light">
+        Selected Program
+        <button class="btn-no" onclick="chooseYes()">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+      <div class="popup-content">
+        <h1 id="popup_title" class="text-xl font-medium">Bicep Curl</h1>
+        <img src="./static/img/excercise/bicep-curls-ex.png" id="popup-pic" alt="รูปภาพตัวอย่าง">
+        <div class="content font-light snap-y">
+          <p class="font-medium">รายละเอียด</p>
+          <p id="popup-detail" class="pb-2 text-gray-600">เก็บศอกให้ชิดข้างลำตัว ไม่แกว่งเวลาผ่อนและออกแรง จะทำให้โดนกล้ามเนื้อหน้าแขนมากขึ้น</p>
+          <p class="font-medium">ข้อควรระวัง</p>
+          <p id="popup-notice" class="text-gray-600">ไม่งอข้อมือเพราะจะทำให้โดนปลายแขนมากกว่าต้นแขนด้านหน้า</p>
+        </div>
+        <div class="popup-actions">
+          <button class="btn btn-yes" onclick="chooseYes()">START PROGRAM</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    function chooseYes() {
+      window.parent.postMessage({ action: "yes" }, "*");
+    }
+    function chooseNo() {
+      window.parent.postMessage({ action: "no" }, "*");
+    }
+  </script>
+</body>
+</html>

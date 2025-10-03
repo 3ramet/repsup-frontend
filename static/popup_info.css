@@ -1,0 +1,103 @@
+:root {
+      --primary-color: #F35D21;
+    }
+body {
+      margin: 0;
+      font-family: "Noto Sans Thai", sans-serif;
+    }
+
+    .popup-overlay {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      /* background: rgba(0,0,0,0.4); */
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      
+    }
+
+    .popup-box {
+      background: #fff;
+      border-radius: 15px;
+      width: 320px;
+      height: fit-content;
+      text-align: center;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+      overflow: hidden;
+      /* Animation สำหรับกล่อง Popup เอง */
+      transform: scale(0.8); /* เริ่มจากขนาดเล็ก */
+      transition: transform 0.3s ease;
+    }
+
+    #popup-container.show .popup-box {
+      transform: scale(1);
+}
+
+    .popup-content img{
+      margin: 8px 0px 16px 0px;
+      border-top: 2px solid var(--primary-color);
+      border-bottom: 2px solid var(--primary-color);
+    }
+
+    .popup-header {
+      background: var(--primary-color);
+      color: white;
+      font-size: 16px;
+      padding: 4px 16px;
+      align-content: center;
+      justify-content: space-between;
+      display: flex;
+      align-items: center;
+    }
+
+    .popup-content {
+      padding: 16px;
+      gap: 16px;
+    }
+
+    .content{
+      text-align: left;
+    }
+
+    .popup-content h1 {
+      text-align: left;
+    }
+
+    .popup-actions {
+      display: flex;
+      justify-content: center;
+      gap: 16px;
+      margin: 16px;
+    }
+
+    .btn {
+      border: none;
+      padding: 8px 32px;
+      font-size: 16px;
+      border-radius: 20px;
+      cursor: pointer;
+      transition: transform 0.25s ease, box-shadow 0.25s ease;
+    }
+    .btn:hover, .btn:active {
+        transform: scale(1.05); /* ✅ ขยายขึ้น 5% ตอนกดค้าง */
+        box-shadow: 0 4px 12px rgba(0,0,0,0.3); /* เพิ่มเงาให้ดูเด่น */
+    }
+    .btn-yes {
+      background: var(--primary-color);
+      color: white;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.2);
+    }
+
+    .btn-no {
+      border: 2px solid var(--primary-color);
+      /* background: white; */
+      padding: 4px 8px;
+      cursor: pointer;
+      border: none;
+      color: white;
+    }
+    .btn-no:hover, .btn-no:active {
+        opacity: 80%; /* ✅ ขยายขึ้น 5% ตอนกดค้าง */
+    }

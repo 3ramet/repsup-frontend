@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>test</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='index_style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='popup_info.css') }}">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Thai:wght@100..900&family=Noto+Sans:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+</head>
+<body class="bg-black bg-cover bg-center">
+    <nav class="header fixed top-0 left-0 w-full text-white px-6 py-4 z-50 font-semibold">
+        <div class="text-xl font-semibold">helloแอปอะรไวะ</div>
+    </nav>
+    <div id="popup-container" class="popup-hidden">
+        <div class="popup-overlay">
+            <div class="popup-box">
+                <div class="popup-header font-light">
+                    Selected Program
+                    <button class="btn-no" onclick="hidePopup()">
+                    <i class="fa-solid fa-xmark"></i>
+                    </button>
+                </div>
+                <div class="popup-content">
+                    <h1 id="popup_title" class="text-xl font-medium">Bicep Curl</h1>
+                    <img src="./static/img/excercise/bicep-curls-ex.png" id="popup-pic" alt="รูปภาพตัวอย่าง">
+                    <div class="content font-light snap-y">
+                        <p class="font-medium">รายละเอียด</p>
+                        <p id="popup-detail" class="pb-2 text-gray-600">เก็บศอกให้ชิดข้างลำตัว ไม่แกว่งเวลาผ่อนและออกแรง จะทำให้โดนกล้ามเนื้อหน้าแขนมากขึ้น</p>
+                        <p class="font-medium">ข้อควรระวัง</p>
+                        <p id="popup-notice" class="text-gray-600">ไม่งอข้อมือเพราะจะทำให้โดนปลายแขนมากกว่าต้นแขนด้านหน้า</p>
+                    </div>
+                    <div class="popup-actions">
+                        <button class="btn btn-yes" onclick="startProgram()">START PROGRAM</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="welcome-content absolute inset-0 flex flex-col justify-center items-center text-white text-center z-20"">
+            <h1 class="animate-wiggle text-white text-5xl font-bold">
+                ยินดีต้อนรับ
+            </h1>
+            
+            <p class="text-lg font-light max-w-xl mx-auto">เลือกท่าออกกำลังกายที่ต้องการ</p>
+            <button>
+                Hej, look at me!
+            </button>
+        </div>
+    <section id="welcome" class="welcome h-screen relative">
+        <div class="absolute inset-0 bg-black opacity-50 z-10"></div>
+        
+    </section>
+    <section id="item-list" class="item-list bg-gray-100">
+        <div class="list_title">
+            <h1 class="font-normal text-base">Workout Programs</h1>
+            <p class="font-light italic text-gray-600 text-xs">View All</p>
+        </div>
+
+        <div class="item container">
+            <div id="card-container"></div>
+        </div>
+        
+    </section>
+    
+    <script src="{{ url_for('static', filename='menu.js')}}"></script>
+</body>
+</html>
