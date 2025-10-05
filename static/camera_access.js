@@ -71,6 +71,8 @@ async function initPose() {
 
 let position = "down";
 let pose_count = 0;
+let ready = true;
+let landmarks = null;
 
 async function detectPose() {
   if (!onStart || !poseLandmarker) return;
@@ -92,9 +94,16 @@ async function detectPose() {
     const midY = (leftShoulder.y + rightShoulder.y + leftHip.y + rightHip.y) / 4;
 
     window.isReady = midX > 0.2 && midX < 0.8 && midY > 0.2 && midY < 0.8;
+    // draw skeleton
+
+    const drawingUtils = new DrawingUtils(ctx);
+    for (const landmarks of results.landmarks) {
+      drawingUtils.drawLandmarks(landmarks, { color: "red", radius: 3 });
+      drawingUtils.drawConnectors(landmarks, PoseLandmarker.POSE_CONNECTIONS, { color: "white", lineWidth: 2 });
+    }
     
     if (window.isReady){
-      sendFrame(results.landmarks[0]);
+      landmarks = results.landmarks[0];
       // console.log("frame send");
       if (exerciseId == 1) { // 1 = bicep curl
         // ตรวจว่า landmark มีค่าครบไหม
@@ -149,7 +158,7 @@ async function sendFrame(landmarks) {
     const payload = `${exerciseId}|${poseString}`;
     // console.log(payload);
     // ส่งข้อมูลแบบ JSON ด้วย HTTPS
-    const response = await fetch("https://172.24.5.192:8080/pose_data", {
+    const response = await fetch("https://172.24.5.196:8080/pose_data", {
       method: "POST",
       headers: { "Content-Type": "text/plain" },
       body: payload
@@ -157,10 +166,12 @@ async function sendFrame(landmarks) {
 
     if (!response.ok) {
       console.error("❌ Server error:", response.statusText);
-    } else {
-      const data = await response.json();
-      // console.log("✅ Server response:", data);
-    }
+      return;
+    } 
+
+    const data = await response.json();
+    console.log("✅ Server response:", data);
+    console.log(Date.now());
   } catch (err) {
     console.error("⚠️ Error sending pose data:", err);
   }
@@ -200,7 +211,9 @@ function checkUserPositionLoop() {
       stopBtn.style.display = "flex";
 
       if (!intervalId) {
-        intervalId = setInterval(sendFrame, 1000);
+        intervalId = setInterval(() => {
+          sendFrame(landmarks);
+        }, 1000);
         isRunning = true;
         console.log("✅ Started sending frames");
       }

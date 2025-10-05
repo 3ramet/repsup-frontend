@@ -1,7 +1,13 @@
-from flask import Flask, render_template, request, jsonify
-from flask_socketio import SocketIO, emit
-from PIL import Image
-import io
+import eventlet
+eventlet.monkey_patch()
+
+from flask import Flask, render_template, request, jsonify  # noqa: E402
+from flask_socketio import SocketIO  # noqa: E402
+
+from ai.repsup_ai import (
+    load_stacking_model,
+    predict_exercise
+)
 
 app = Flask(__name__)
 socketio = SocketIO(app, cors_allowed_origins="*")
@@ -44,19 +50,40 @@ def pose_data():
         for x, y, z in (p.split(",") for p in pose_str.split(";") if p)
     ]
 
+    points = {}
+    for i, (x, y, z) in enumerate(pose_points):
+        points[f'x{i}'] = x
+        points[f'y{i}'] = y
+        points[f'z{i}'] = z
+
     print(f"✅ ID={exercise_id}, ได้ {len(pose_points)} จุด")
     print("จุดแรก:", pose_points[0])
 
+    model = load_stacking_model("./ai/models/bicep_curl_model.pkl")
+    predicted_exercise = None
+    bicep_curl = False
+    lateral_raise = False
+    squat = False
+    if model:
+        predicted_exercise = predict_exercise(points, model)
+        if predicted_exercise == "bicep_curl":
+            bicep_curl = True
+        elif predicted_exercise == "lateral_raise":
+            lateral_raise = True
+        elif predicted_exercise == "squat":
+            squat = True
+        else:
+            print("❌ ไม่สามารถโหลดโมเดลได้")
+
+
     # คุณสามารถทำการบันทึก / ประมวลผลต่อได้ที่นี่
-    return jsonify({"bicep": True, "lateral": False, "squart": False})
+    return jsonify({"bicep": bicep_curl, "lateral": lateral_raise, "squat": squat})
     # return jsonify({"status": "received", "points": len(pose_points)})
 
 
     
 
 if __name__ == "__main__":
-    import eventlet
-    eventlet.monkey_patch()
     # socketio.run(app, host="127.0.0.1", port=5000, debug=True)
     app.run(
         host="0.0.0.0",
