@@ -3,18 +3,21 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>test</title>
+    <title>RESP UP</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='index_style.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='popup_info.css') }}">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Thai:wght@100..900&family=Noto+Sans:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+    <link rel="stylesheet"href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>    
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+    <link rel="icon" href="../static/img/logo-bg.png" type="image/x-icon">
 </head>
 <body class="bg-black bg-cover bg-center">
-    <nav class="header fixed top-0 left-0 w-full text-white px-6 py-4 z-50 font-semibold">
-        <div class="text-xl font-semibold">helloแอปอะรไวะ</div>
+    <nav class="header fixed top-0 left-0 w-full text-white px-2 py-2 z-50 font-semibold">
+        <img src="./static/img/logo-black.png" alt="รูปภาพตัวอย่าง">
+        <!-- <h1 class="text-xl font-semibold">Rape-UP</h1> -->
     </nav>
     <div id="popup-container" class="popup-hidden">
         <div class="popup-overlay">
@@ -42,18 +45,12 @@
         </div>
     </div>
     <div class="welcome-content absolute inset-0 flex flex-col justify-center items-center text-white text-center z-20"">
-            <h1 class="animate-wiggle text-white text-5xl font-bold">
-                ยินดีต้อนรับ
-            </h1>
-            
-            <p class="text-lg font-light max-w-xl mx-auto">เลือกท่าออกกำลังกายที่ต้องการ</p>
-            <button>
-                Hej, look at me!
-            </button>
+            <img src="./static/img/respup_text_white.png" class="pointer-events-none animate__animated animate__fadeInDown" alt="รูปภาพตัวอย่าง">
+        
+            <p class="text-lg font-light max-w-xl mx-auto animate__animated animate__fadeInDown animate__delay-0.5s">Perfect your form, Maximize your gains</p>
         </div>
     <section id="welcome" class="welcome h-screen relative">
         <div class="absolute inset-0 bg-black opacity-50 z-10"></div>
-        
     </section>
     <section id="item-list" class="item-list bg-gray-100">
         <div class="list_title">
@@ -66,7 +63,6 @@
         </div>
         
     </section>
-    
     <script src="{{ url_for('static', filename='menu.js')}}"></script>
 </body>
 </html>

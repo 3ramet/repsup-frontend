@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Body Tracking Demo</title>
+  <!-- <script type="module" src="main_func_mediapipe.js"></script> -->
+  <script type="module" src="{{ url_for('static', filename='main_func_mediapipe.js') }}"></script>
+  <style>
+    body {
+      margin: 0;
+      overflow: hidden;
+    }
+    video, canvas {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      object-fit: cover;
+    }
+  </style>
+</head>
+<body>
+  <video id="video" autoplay muted playsinline></video>
+  <canvas id="output"></canvas>
+</body>
+</html>

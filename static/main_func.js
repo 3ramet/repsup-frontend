@@ -7,6 +7,10 @@ fetch("/static/exercise_list.json")
         const item = data.find(d => d.id == id);
         if(item){
             document.getElementById("title").textContent = item.title
+            document.getElementById("popup_title").textContent = item.title;
+            document.getElementById("popup-detail").textContent = item.detail;
+            document.getElementById("popup-notice").textContent = item.notice;
+            document.getElementById("popup-pic").src = item.ex_pic || item.pic;
         }}
     )
 
@@ -26,6 +30,8 @@ function hidePopup() {
 function showInfoPopup() {
   const popup = document.getElementById("popup-container-info");
   popup.classList.add("show"); // เปิดพร้อม animation
+  popup.classList.remove("popup-hidden");
+  console.log("show");
 }
 
 function hideInfoPopup() {
@@ -34,6 +40,7 @@ function hideInfoPopup() {
   setTimeout(() => {
     popup.classList.add("popup-hidden"); // ซ่อนจริง ๆ หลัง animation จบ
   }, 300);
+  console.log("hide");
 }
 
 window.addEventListener("message", function(event) {

@@ -3,7 +3,7 @@ let currentExerciseId = null;
 // Scrolling Function
 document.addEventListener("DOMContentLoaded", () => {
   const welcome = document.querySelector(".welcome");
-  const minHeight = 500; // ความสูงต่ำสุด
+  const minHeight = 30; // ความสูงต่ำสุด
 
   window.addEventListener("scroll", () => {
     const newHeight = Math.max(window.innerHeight - window.scrollY, minHeight);

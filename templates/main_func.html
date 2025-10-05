@@ -10,14 +10,19 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Thai:wght@100..900&family=Noto+Sans:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+  <link rel="stylesheet"href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
   <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
-  <title>Camera Access</title>
+  <link rel="icon" href="../static/img/logo-bg.png" type="image/x-icon">
+  <title>RESP UP</title>
 </head>
 <body>
   <div id="overlay" style="display:none;">
     <img src="{{ url_for('static', filename='img/man_idle.png')}}" alt="Idle Man" id="idleMan">
   </div>
-  <video src="" id="camera" autoplay></video>
+  
+  <video src="" style="display:block;" id="camera" autoplay muted playsinline></video>
+  <canvas id="output"></canvas>
+
   <div id="popup-container-info" class="popup-hidden">
         <div class="popup-overlay">
             <div class="popup-box">
@@ -48,6 +53,7 @@
       <a onclick="showInfoPopup()" class="icon-btn">
         <i class="fa-solid fa-info"></i>
       </a>
+      
       <div class="btn-func">
         <button id="startBtn" class="icon-btn start-btn">
             <i class="fa-solid fa-play"></i> Start
@@ -57,11 +63,15 @@
         </button>
       </div>
   </section>
+  <div class="count text-5xl text-white font-bold animate__animated animate__bounceIn">
+    <h1 id="count_txt">0</h1>
+  </div>
   <div id="popup-container" class="popup-hidden">
     <iframe src="{{ url_for('popup') }}"></iframe>
   </div>
   <script src="https://cdn.socket.io/4.6.1/socket.io.min.js"></script>
-  <script src="{{ url_for('static', filename='camera_access.js') }}"></script>
+  <script type="module" src="{{ url_for('static', filename='camera_access.js') }}"></script>
   <script src="{{ url_for('static', filename='main_func.js') }}"></script>
+  <!-- <script src="{{ url_for('static', filename='main_func_mediapipe.js') }}"></script> -->
 </body>
 </html>

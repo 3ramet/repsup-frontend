@@ -24,30 +24,32 @@ def popup():
 def popup_info():
     return render_template("pop-up-info.html")
 
-@socketio.on("frame")
-def handle_frame(data):
-    """
-    data = ArrayBuffer (binary) จาก client
-    """
-    # แปลง bytes → Image
-    try:
-         # 1️⃣ ตรวจสอบ type ของข้อมูล
-        print("Received type:", type(data))
-        if isinstance(data, bytes):
-            print("Received bytes length:", len(data))
-        else:
-            print("Received non-bytes, type:", type(data))
+@app.route("/mediapipe")
+def mediapipe_page():
+    return render_template("mediapipe.html")
 
-        # 2️⃣ แปลงเป็น Image (ถ้าเป็น bytes)
-        if isinstance(data, bytes):
-            img = Image.open(io.BytesIO(data))
-            print("Image size:", img.size)
-            # สามารถบันทึกเป็นไฟล์ทดสอบได้
-            img.save("test_frame.jpg")
-        emit("response", {"status": "ok"})
-    except Exception as e:
-        print("Error processing frame:", e)
-        emit("response", {"status": "error", "msg": str(e)})
+@app.route("/pose_data", methods=["POST"])
+def pose_data():
+    raw_data = request.data.decode("utf-8")
+
+    # 🔹 แยกส่วน id และข้อมูลจุด
+    try:
+        exercise_id, pose_str = raw_data.split("|", 1)
+    except ValueError:
+        return jsonify({"error": "invalid payload"}), 400
+
+    # 🔹 แปลง string -> list ของ [x, y, z]
+    pose_points = [
+        [float(x), float(y), float(z)]
+        for x, y, z in (p.split(",") for p in pose_str.split(";") if p)
+    ]
+
+    print(f"✅ ID={exercise_id}, ได้ {len(pose_points)} จุด")
+    print("จุดแรก:", pose_points[0])
+
+    # คุณสามารถทำการบันทึก / ประมวลผลต่อได้ที่นี่
+    return jsonify({"bicep": True, "lateral": False, "squart": False})
+    # return jsonify({"status": "received", "points": len(pose_points)})
 
 
     
@@ -59,5 +61,5 @@ if __name__ == "__main__":
     app.run(
         host="0.0.0.0",
         port=8080,
-        # ssl_context=("ssl.crt", "ssl_private.key"),
+        ssl_context=("secrets/ssl.crt", "secrets/ssl_private.key"),
         debug=True)
