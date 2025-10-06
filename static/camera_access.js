@@ -213,7 +213,7 @@ function checkUserPositionLoop() {
       if (!intervalId) {
         intervalId = setInterval(() => {
           sendFrame(landmarks);
-        }, 1000);
+        }, 300);
         isRunning = true;
         console.log("✅ Started sending frames");
       }

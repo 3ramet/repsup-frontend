@@ -5,14 +5,20 @@ import pandas as pd
 import glob
 from typing import List, Optional, Tuple, Any
 
-def load_stacking_model(model_path: str) -> dict:
-    if not os.path.exists(model_path):
-        raise FileNotFoundError(f"Model file not found at {model_path}")
-    with open(model_path, "rb") as file:
+from tensorflow.keras.models import Sequential, load_model
+
+def load_metadata(metadata_file_path: str) -> dict:
+    if not os.path.exists(metadata_file_path):
+        raise FileNotFoundError(f"Model file not found at {metadata_file_path}")
+    with open(metadata_file_path, "rb") as file:
         stacking_model: dict = pickle.load(file)
-        print(f"Model loaded from {model_path}")
-        print(f"{type(stacking_model)=}, keys: {list(stacking_model.keys())}")
     return stacking_model
+
+def load_lstm_model(model_path: str) -> Sequential:
+    if not os.path.exists(model_path):
+        raise FileNotFoundError(f"LSTM model file not found at {model_path}")
+    model = load_model(model_path)
+    return model
 
 JOINT_ANGLE_COLUMNS = ['left_elbow', 'right_elbow', 'left_shoulder', 'right_shoulder',
               'left_hip', 'right_hip', 'left_knee', 'right_knee']
@@ -138,10 +144,27 @@ def generate_windowed_features(
 memory: list[dict[str, float]] = []
 count: int = 0
 
-def predict_exercise(points: dict[str, float], model: dict) -> Optional[str]:
-    xgb_model = model['model']
-    scaler_model = model['scaler']
-    best_threshold: float = float(model.get('best_threshold', 0.5))
+def predict_exercise(points: dict[str, float], metadata: dict) -> Optional[str]:
+    # metadata = {
+    #     'scaler': scaler,
+    #     'angle_cols': ANGLE_COLS,
+    #     'feature_cols': feature_cols,
+    #     'window_size': WINDOW_SIZE,
+    #     'window_step': WINDOW_STEP,
+    #     'best_threshold': best_thresh
+    # }
+    # with open('lstm_metadata.pkl', 'wb') as f:
+    #     pickle.dump(metadata, f)
+
+    scaler_model = metadata['scaler']
+    best_threshold: float = float(metadata.get('best_threshold', 0.5))
+    feature_cols: List[str] = metadata['feature_cols']
+    window_size: int = int(metadata.get('window_size', 5))
+    window_step: int = int(metadata.get('window_step', 1))
+    angle_cols: List[str] = metadata['angle_cols']
+    lstm_model: Sequential = load_lstm_model("./ai/models/bicep_curl/lstm_model_final.keras")
+
+    lstm_model.predict(np.zeros((1, window_size, len(feature_cols))))  # warm up 
 
     global memory, count
     points['source_file'] = 'input.csv'
@@ -162,33 +185,50 @@ def predict_exercise(points: dict[str, float], model: dict) -> Optional[str]:
         landmark_df = pd.concat([landmark_df, pd.DataFrame([last_n])], ignore_index=True)
     memory.append(points)
 
-    joint_angle_df: pd.DataFrame = extract_joint_angles_from_landmarks(landmark_df)
-    feature_df: pd.DataFrame = create_feature_dataframe(landmark_df, joint_angle_df)
-    # update memory
-
-    Xw: Optional[pd.DataFrame]
-    idx_map: Optional[list]
-    Xw, idx_map = generate_windowed_features(
-        joint_angle_dataframe=feature_df[JOINT_ANGLE_COLUMNS],
+    print(f"landmark_df.shape: {landmark_df.shape}")
+    if landmark_df.shape[0] < 2:
+        print("Not enough data to predict.")
+        return None
+    joint_angle_df = extract_joint_angles_from_landmarks(landmark_df)
+    feature_df = create_feature_dataframe(landmark_df, joint_angle_df)
+    if feature_df.shape[0] < 2:
+        print("Not enough feature data to predict.")
+        return None
+    windowed_feature_df, _ = generate_windowed_features(
+        joint_angle_dataframe=feature_df[angle_cols],
         source_files=feature_df['source_file'],
-        window_size=n,
-        window_step=1
+        window_size=window_size,
+        window_step=window_step
     )
-
-    print(f"Generated windowed features: {Xw.shape if Xw is not None else None}")
-
-    X_scaled: Optional[np.ndarray] = None
-    if Xw is not None:
-        X_scaled = scaler_model.transform(Xw)
-        print(f"{Xw.shape=}, {X_scaled.shape=}")
-        predictions_proba: np.ndarray = xgb_model.predict_proba(X_scaled)[:, 1]
-        predictions: np.ndarray = (predictions_proba >= best_threshold).astype(int)
-        print(f"Predictions (proba >= {best_threshold}): {predictions_proba}")
-        print(f"Predictions (class): {predictions}")
-        if np.any(predictions == 1):
-            return "bicep_curl"
-        else:
-            return "unknown"
+    if windowed_feature_df is None or windowed_feature_df.shape[0] == 0:
+        print("No windowed features generated.")
+        return None
+    print(f"windowed_feature_df.shape: {windowed_feature_df.shape}")
+    windowed_feature_df = windowed_feature_df[feature_cols]
+    print(f"windowed_feature_df after selecting feature_cols.shape: {windowed_feature_df.shape}")
+    if windowed_feature_df.shape[0] == 0:
+        print("No windowed features after selecting feature columns.")
+        return None
+    scaled_features = scaler_model.transform(windowed_feature_df)
+    reshaped_features = scaled_features.reshape((scaled_features.shape[0], window_size, len(feature_cols)))
+    predictions = lstm_model.predict(reshaped_features)
+    print(f"Predictions: {predictions.flatten()}")
+    avg_prediction = np.mean(predictions)
+    print(f"Average prediction: {avg_prediction}, Best threshold: {best_threshold}")
+    if avg_prediction >= best_threshold:
+        print("Predicted exercise: bicep_curl")
+        return "bicep_curl"
+    elif avg_prediction < (1 - best_threshold):
+        print("Predicted exercise: lateral_raise")
+        return "lateral_raise"
+    else:
+        print("No confident prediction.")
+        return None
         
     return None
 
+# ==========================
+# LSTM Model Predicting Code
+# ==========================
+
+# Load LSTM model

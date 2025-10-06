@@ -4,13 +4,15 @@ eventlet.monkey_patch()
 from flask import Flask, render_template, request, jsonify  # noqa: E402
 from flask_socketio import SocketIO  # noqa: E402
 
-from ai.repsup_ai import (
-    load_stacking_model,
+from ai.lstm_ai import (
+    load_metadata,
     predict_exercise
 )
 
 app = Flask(__name__)
 socketio = SocketIO(app, cors_allowed_origins="*")
+
+metadata = load_metadata("./ai/models/bicep_curl/lstm_metadata.pkl")
 
 @app.route("/")
 def index():
@@ -59,21 +61,22 @@ def pose_data():
     print(f"✅ ID={exercise_id}, ได้ {len(pose_points)} จุด")
     print("จุดแรก:", pose_points[0])
 
-    model = load_stacking_model("./ai/models/bicep_curl_model.pkl")
+    # model = load_stacking_model("./ai/models/bicep_curl_model.pkl")
     predicted_exercise = None
     bicep_curl = False
     lateral_raise = False
     squat = False
-    if model:
-        predicted_exercise = predict_exercise(points, model)
-        if predicted_exercise == "bicep_curl":
-            bicep_curl = True
-        elif predicted_exercise == "lateral_raise":
-            lateral_raise = True
-        elif predicted_exercise == "squat":
-            squat = True
-        else:
-            print("❌ ไม่สามารถโหลดโมเดลได้")
+    if metadata:
+        if exercise_id == "1":
+            predicted_exercise = predict_exercise(points, metadata, model="bicep_curl")
+            bicep_curl = predicted_exercise == "bicep_curl"
+        elif exercise_id == "2":
+            predicted_exercise = predict_exercise(points, metadata, model="lateral_raise")
+            lateral_raise = predicted_exercise == "lateral_raise"
+        elif exercise_id == "3":
+            predicted_exercise = predict_exercise(points, metadata, model="squat")
+            squat = predicted_exercise == "squat"
+        print(f"{predicted_exercise=}")
 
 
     # คุณสามารถทำการบันทึก / ประมวลผลต่อได้ที่นี่
